@@ -4,6 +4,7 @@ const User = require('../models/user');
 const {
   USER_NOT_FOUND_MESSAGE,
   INCORRECT_USER_DATA_MESSAGE,
+  INCORRECT_UPDATE_USER_DATA_MESSAGE,
 } = require('../utils/constants');
 
 const NotFoundError = require('../errors/NotFoundError');
@@ -34,5 +35,30 @@ const findUser = (res, next, userId) => {
     });
 };
 
+// Функция обновления информации о пользователе
+const updateUserData = (req, res, next, data) => {
+  const { _id } = req.user;
+  User.findByIdAndUpdate(_id, data, {
+    new: true,
+    runValidators: true,
+  })
+    .then((user) => {
+      checkData(user);
+      res.send(user);
+    })
+    .catch((error) => {
+      if (error instanceof ValidationError) {
+        return next(new BadRequestError(INCORRECT_UPDATE_USER_DATA_MESSAGE));
+      }
+      return next(error);
+    });
+};
+
 // Получение информации о текущем пользователе
 module.exports.getCurrentUser = (req, res, next) => findUser(res, next, req.userId);
+
+// Обновление информации о пользователе
+module.exports.updateUserInfo = (req, res, next) => {
+  const { name, email } = req.body;
+  return updateUserData(req, res, next, { name, email });
+};
