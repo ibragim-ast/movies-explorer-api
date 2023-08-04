@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const { Error: { ValidationError, CastError } } = require('mongoose');
 const User = require('../models/user');
 
@@ -5,10 +6,13 @@ const {
   USER_NOT_FOUND_MESSAGE,
   INCORRECT_USER_DATA_MESSAGE,
   INCORRECT_UPDATE_USER_DATA_MESSAGE,
+  NOT_UNIQUE_EMAIL_ERROR_MESSAGE,
+  INCORRECT_ADD_USER_DATA_MESSAGE,
 } = require('../utils/constants');
 
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
+const ConflictingRequestError = require('../errors/BadRequestError');
 
 // Функция проверки наличия данных
 const checkData = (data) => {
@@ -61,4 +65,32 @@ module.exports.getCurrentUser = (req, res, next) => findUser(res, next, req.user
 module.exports.updateUserInfo = (req, res, next) => {
   const { name, email } = req.body;
   return updateUserData(req, res, next, { name, email });
+};
+
+// Создание нового пользователя
+module.exports.createUser = (req, res, next) => {
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
+
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      name, about, avatar, email, password: hash,
+    }))
+    .then((createdUser) => {
+      const user = createdUser.toObject();
+      delete user.password;
+      return res
+        .status(201)
+        .send(user);
+    })
+    .catch((error) => {
+      if (error.code === 11000) {
+        return next(new ConflictingRequestError(NOT_UNIQUE_EMAIL_ERROR_MESSAGE));
+      }
+      if (error instanceof ValidationError) {
+        return next(new BadRequestError(INCORRECT_ADD_USER_DATA_MESSAGE));
+      }
+      return next(error);
+    });
 };
