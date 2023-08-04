@@ -7,6 +7,7 @@ const INVALID_AUTH_DATA_ERROR_MESSAGE = 'Неправильные почта и�
 const USER_NOT_FOUND_MESSAGE = 'Пользователь с указанным _id не найден';
 const INCORRECT_USER_DATA_MESSAGE = 'Переданы некорректные данные пользователя';
 const INCORRECT_UPDATE_USER_DATA_MESSAGE = 'Переданы некорректные данные при обновлении профиля';
+const MOVIE_NOT_FOUND_MESSAGE = 'Фильм с указанным _id не найден';
 
 module.exports = {
   URL_REGEX,
@@ -17,4 +18,5 @@ module.exports = {
   USER_NOT_FOUND_MESSAGE,
   INCORRECT_USER_DATA_MESSAGE,
   INCORRECT_UPDATE_USER_DATA_MESSAGE,
+  MOVIE_NOT_FOUND_MESSAGE,
 };
