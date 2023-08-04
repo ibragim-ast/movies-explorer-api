@@ -1,33 +1,13 @@
 require('dotenv').config();
 
-const {
-  NODE_ENV,
-  JWT_SECRET,
-  DB_HOST,
+const { PORT = 3000 } = process.env;
+const { DB_URI = 'mongodb://127.0.0.1:27017/bitfilmsdb' } = process.env;
+const { JWT_SECRET } = process.env;
+const { NODE_ENV } = process.env;
+
+module.exports = {
   PORT,
-  SECRET,
-} = process.env;
-
-const DEV_SECRET = 'SECRETSECRETSECRET';
-const DEV_DB_HOST = 'mongodb://localhost:27017/bitfilmsdb';
-const DEV_PORT = 3000;
-
-const DB = NODE_ENV === 'production' && DB_HOST
-  ? DB_HOST
-  : DEV_DB_HOST;
-
-const SERVER_PORT = NODE_ENV === 'production'
-&& PORT
-  ? PORT
-  : DEV_PORT;
-
-const SECRET_STRING = NODE_ENV === 'production'
-&& SECRET
-  ? SECRET
-  : DEV_SECRET;
-
-export default {
-  DB,
-  SERVER_PORT,
-  SECRET_STRING,
+  DB_URI,
+  JWT_SECRET,
+  NODE_ENV,
 };

@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { Error: { ValidationError, CastError } } = require('mongoose');
 const User = require('../models/user');
+const { NODE_ENV, JWT_SECRET } = require('../utils/config');
 
 const {
   USER_NOT_FOUND_MESSAGE,
@@ -93,4 +95,19 @@ module.exports.createUser = (req, res, next) => {
       }
       return next(error);
     });
+};
+
+// Аутентификация пользователя
+module.exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+      );
+      res.send({ token });
+    })
+    .catch(next);
 };

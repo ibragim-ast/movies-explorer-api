@@ -1,8 +1,11 @@
 const router = require('express').Router();
 
-const { createUser } = require('../controllers/users');
+const { createUser, login } = require('../controllers/users');
 
-const { createUserJoi } = require('../middlewares/validation');
+const { createUserJoi, loginJoi } = require('../middlewares/validation');
 
 // Маршрут для регистрации пользователя
 router.post('/signup', createUserJoi, createUser);
+
+// Маршрут для логина
+router.post('/signin', loginJoi, login);
