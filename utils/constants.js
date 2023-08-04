@@ -7,6 +7,9 @@ const USER_NOT_FOUND_MESSAGE = 'Пользователь с указанным _
 const INCORRECT_USER_DATA_MESSAGE = 'Переданы некорректные данные пользователя';
 const INCORRECT_UPDATE_USER_DATA_MESSAGE = 'Переданы некорректные данные при обновлении профиля';
 const INCORRECT_ADD_MOVIE_DATA_MESSAGE = 'Переданы некорректные данные при создании фильма';
+const MOVIE_NOT_FOUND_MESSAGE = 'Фильм с указанным _id не найден';
+const NO_RIGHTS_TO_DELETE_ERROR_MESSAGE = 'У вас недостаточно прав на удаление данного фильма';
+const INCORRECT_MOVIE_DATA_MESSAGE = 'Переданы некорректные данные фильма';
 
 module.exports = {
   ERROR_400,
@@ -17,4 +20,7 @@ module.exports = {
   INCORRECT_USER_DATA_MESSAGE,
   INCORRECT_UPDATE_USER_DATA_MESSAGE,
   INCORRECT_ADD_MOVIE_DATA_MESSAGE,
+  MOVIE_NOT_FOUND_MESSAGE,
+  NO_RIGHTS_TO_DELETE_ERROR_MESSAGE,
+  INCORRECT_MOVIE_DATA_MESSAGE,
 };

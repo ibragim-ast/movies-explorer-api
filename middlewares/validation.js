@@ -25,8 +25,15 @@ const createMoviesJoi = celebrate({
   }),
 });
 
+const checkMovieIdJoi = celebrate({
+  params: Joi.object().keys({
+    movieId: Joi.string().required().length(24).hex(),
+  }),
+});
+
 module.exports = {
   URL_REGEX,
   updateUserJoi,
   createMoviesJoi,
+  checkMovieIdJoi,
 };
