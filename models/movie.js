@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const URL_REGEX = require('../utils/constants');
+const URL_REGEX = require('../middlewares/validation');
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -15,7 +15,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
   year: {
-    type: Number,
+    type: String,
     required: true,
   },
   description: {
