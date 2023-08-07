@@ -5,11 +5,11 @@ const URL_REGEX = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]+\.[a-zA-Z0-9()]+\b(
 const updateUserJoi = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    email: Joi.string().required().email,
+    email: Joi.string().required().email(),
   }),
 });
 
-const createMoviesJoi = celebrate({
+const addMoviesJoi = celebrate({
   body: Joi.object().keys({
     country: Joi.string().required(),
     director: Joi.string().required(),
@@ -49,7 +49,7 @@ const loginJoi = celebrate({
 module.exports = {
   URL_REGEX,
   updateUserJoi,
-  createMoviesJoi,
+  addMoviesJoi,
   checkMovieIdJoi,
   createUserJoi,
   loginJoi,

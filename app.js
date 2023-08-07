@@ -1,8 +1,68 @@
-// const express = require('express');
-// const helmet = require('helmet');
-// const rateLimit = require('express-rate-limit');
-// const mongoose = require('mongoose');
-// const { errors } = require('celebrate');
-// const cors = require('cors');
-// const { SERVER_PORT, DB } = require('./utils/config');
-// const errorsHandler = require('./middlewares/errorsHandler');
+const express = require('express');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const mongoose = require('mongoose');
+const { errors } = require('celebrate');
+const cors = require('cors');
+const { PORT, DB_URI } = require('./utils/config');
+const errorsHandler = require('./middlewares/errorsHandler');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+const router = require('./routes');
+
+const allowedCors = [
+  'localhost:3000',
+  'http://localhost',
+  'http://localhost:3001',
+  'http://localhost:3000',
+];
+
+const corsOptions = {
+  origin: allowedCors,
+  optionsSuccessStatus: 200,
+  credentials: true,
+};
+
+// Подключение к базе данных MongoDB
+mongoose.connect(DB_URI)
+  .then(() => {
+    console.log('Связь с базой данных установлена');
+  })
+  .catch((error) => {
+    console.log('Ошибка базы данных:', error);
+    process.exit(1);
+  });
+
+const app = express();
+
+// Использование middleware Helmet для обеспечения безопасности приложения
+app.use(helmet());
+
+// Middleware для обработки данных из тела запроса в формате URL-encoded и JSON
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use(requestLogger);
+
+// Middleware для ограничения количества запросов от одного IP
+app.use(rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: 'Слишком много запросов с вашего IP, попробуйте позже',
+}));
+
+app.use(cors(corsOptions));
+
+// Подключение маршрутизатора
+app.use(router);
+
+// Middleware для обработки ошибок Celebrate
+app.use(errors());
+app.use(errorLogger);
+
+// Middleware для обработки ошибок
+app.use(errorsHandler);
+
+// Запуск сервера на указанном порту
+app.listen(PORT, () => {
+  console.log('Сервер успешно запущен!');
+});

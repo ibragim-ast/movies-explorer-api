@@ -1,4 +1,4 @@
-const ERROR_400 = require('../utils/constants');
+const { ERROR_400 } = require('../utils/constants');
 
 class BadRequestError extends Error {
   constructor(message) {

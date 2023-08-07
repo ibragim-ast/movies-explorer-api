@@ -61,7 +61,7 @@ const updateUserData = (req, res, next, data) => {
 };
 
 // Получение информации о текущем пользователе
-module.exports.getCurrentUser = (req, res, next) => findUser(res, next, req.userId);
+module.exports.getCurrentUser = (req, res, next) => findUser(res, next, req.user._id);
 
 // Обновление информации о пользователе
 module.exports.updateUserInfo = (req, res, next) => {
