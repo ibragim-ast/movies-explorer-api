@@ -1,33 +1,28 @@
 const jwt = require('jsonwebtoken');
 const UnauthorizedError = require('../errors/UnauthorizedError');
-const { UNAUTHORIZED_ERROR_MESSAGE } = require('../utils/constants');
-const { NODE_ENV, JWT_SECRET } = require('../utils/config');
+const { UNAUTHORIZED_ACCESS } = require('../utils/constants');
+const { SECRET_KEY } = require('../utils/config');
 
 // Функция обработки ошибки авторизации
 const handleAuthError = () => {
-  throw new UnauthorizedError(UNAUTHORIZED_ERROR_MESSAGE);
+  throw new UnauthorizedError(UNAUTHORIZED_ACCESS);
 };
-
-// Функция извлечения токена из заголовка
-const extractBearerToken = (header) => header.replace('Bearer ', '');
 
 // Middleware для проверки авторизации
 module.exports.auth = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    return handleAuthError(res);
+    return handleAuthError();
   }
 
-  const token = extractBearerToken(authorization);
+  const token = authorization.replace('Bearer ', '');
   let payload;
 
   try {
-    payload = jwt.verify(token, NODE_ENV === 'production'
-      ? JWT_SECRET
-      : 'dev-secret');
+    payload = jwt.verify(token, SECRET_KEY);
   } catch (error) {
-    return handleAuthError(res);
+    return handleAuthError();
   }
 
   req.user = payload;

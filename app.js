@@ -1,26 +1,13 @@
 const express = require('express');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
-const { errors } = require('celebrate');
 const cors = require('cors');
+const helmet = require('helmet');
+const { errors } = require('celebrate');
+const router = require('./routes');
 const { PORT, DB_URI } = require('./utils/config');
 const errorsHandler = require('./middlewares/errorsHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const router = require('./routes');
-
-const allowedCors = [
-  'localhost:3000',
-  'http://localhost',
-  'http://localhost:3001',
-  'http://localhost:3000',
-];
-
-const corsOptions = {
-  origin: allowedCors,
-  optionsSuccessStatus: 200,
-  credentials: true,
-};
+const limiter = require('./middlewares/rateLimiter');
 
 // Подключение к базе данных MongoDB
 mongoose.connect(DB_URI)
@@ -32,37 +19,50 @@ mongoose.connect(DB_URI)
     process.exit(1);
   });
 
+// Создание экземпляра Express приложения
 const app = express();
 
-// Использование middleware Helmet для обеспечения безопасности приложения
+// Разрешенные домены для CORS
+const allowedCors = [
+  'http://localhost:3000',
+];
+
+// Опции для CORS
+const corsOptions = {
+  origin: allowedCors,
+  optionsSuccessStatus: 200,
+  credentials: true,
+};
+
+// Middleware CORS
+app.use(cors(corsOptions));
+
+// Middleware безопасности (Helmet)
 app.use(helmet());
 
-// Middleware для обработки данных из тела запроса в формате URL-encoded и JSON
+// Middleware ограничения скорости запросов
+app.use(limiter);
+
+// Middleware для обработки данных из тела запроса (URL-encoded и JSON)
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Middleware для логгирования запросов
 app.use(requestLogger);
-
-// Middleware для ограничения количества запросов от одного IP
-app.use(rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: 'Слишком много запросов с вашего IP, попробуйте позже',
-}));
-
-app.use(cors(corsOptions));
 
 // Подключение маршрутизатора
 app.use(router);
 
+// Middleware для логгирования ошибок
+app.use(errorLogger);
+
 // Middleware для обработки ошибок Celebrate
 app.use(errors());
-app.use(errorLogger);
 
 // Middleware для обработки ошибок
 app.use(errorsHandler);
 
 // Запуск сервера на указанном порту
 app.listen(PORT, () => {
-  console.log('Сервер успешно запущен!');
+  console.log(`Сервер успешно запущен на ${PORT} порту`);
 });

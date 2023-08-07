@@ -1,38 +1,42 @@
-const SUCCES_201 = 201;
-const ERROR_400 = 400;
-const ERROR_401 = 401;
-const ERROR_404 = 404;
-const ERROR_409 = 409;
+const HTTP_STATUS_CREATED = 201;
+const HTTP_STATUS_BAD_REQUEST = 400;
+const HTTP_STATUS_UNAUTHORIZED = 401;
+const FORBIDDEN_ACCESS_ERROR = 403;
+const HTTP_STATUS_NOT_FOUND = 404;
+const HTTP_STATUS_CONFLICT = 409;
 
-const INVALID_AUTH_DATA_ERROR_MESSAGE = 'Неправильные почта или пароль';
-const USER_NOT_FOUND_MESSAGE = 'Пользователь с указанным _id не найден';
-const INCORRECT_USER_DATA_MESSAGE = 'Переданы некорректные данные пользователя';
-const INCORRECT_UPDATE_USER_DATA_MESSAGE = 'Переданы некорректные данные при обновлении профиля';
-const INCORRECT_DATA_MESSAGE = 'Переданы некорректные данные при создании фильма';
-const MOVIE_NOT_FOUND_MESSAGE = 'Фильм с указанным _id не найден';
-const NO_RIGHTS_TO_DELETE_ERROR_MESSAGE = 'У вас недостаточно прав на удаление данного фильма';
-const INCORRECT_MOVIE_DATA_MESSAGE = 'Переданы некорректные данные фильма';
-const NOT_UNIQUE_EMAIL_ERROR_MESSAGE = 'Пользователь с таким email уже зарегистрирован';
-const INCORRECT_ADD_USER_DATA_MESSAGE = 'Переданы некорректные данные при создании пользователя';
-const UNAUTHORIZED_ERROR_MESSAGE = 'Необходима авторизация';
-const INCORRECT_URL = 'Некорректная ссылка';
+const INVALID_AUTH_CREDENTIALS = 'Неправильные почта или пароль';
+const USER_NOT_FOUND = 'Пользователь с указанным идентификатором не найден';
+const INCORRECT_USER_DATA = 'Переданы некорректные данные пользователя';
+const INCORRECT_UPDATE_USER_DATA = 'Переданы некорректные данные при обновлении профиля';
+const INCORRECT_MOVIE_DATA = 'Переданы некорректные данные при добавлении фильма';
+const MOVIE_NOT_FOUND = 'Фильм с указанным идентификатором не найден';
+const NO_RIGHTS_TO_DELETE_MOVIE = 'У вас недостаточно прав на удаление данного фильма';
+const EMAIL_ALREADY_REGISTERED = 'Пользователь с таким email уже зарегистрирован';
+const INCORRECT_ADD_USER_DATA = 'Переданы некорректные данные при создании пользователя';
+const UNAUTHORIZED_ACCESS = 'Необходима авторизация';
+const INCORRECT_URL_FORMAT = 'Некорректный формат ссылки';
+const INTERNAL_SERVER_ERROR = 'Ошибка сервера';
+const INVALID_EMAIL_FORMAT = 'Некорректный email';
 
 module.exports = {
-  SUCCES_201,
-  ERROR_400,
-  ERROR_401,
-  ERROR_404,
-  ERROR_409,
-  INCORRECT_URL,
-  INVALID_AUTH_DATA_ERROR_MESSAGE,
-  USER_NOT_FOUND_MESSAGE,
-  INCORRECT_USER_DATA_MESSAGE,
-  INCORRECT_UPDATE_USER_DATA_MESSAGE,
-  INCORRECT_DATA_MESSAGE,
-  MOVIE_NOT_FOUND_MESSAGE,
-  NO_RIGHTS_TO_DELETE_ERROR_MESSAGE,
-  INCORRECT_MOVIE_DATA_MESSAGE,
-  NOT_UNIQUE_EMAIL_ERROR_MESSAGE,
-  INCORRECT_ADD_USER_DATA_MESSAGE,
-  UNAUTHORIZED_ERROR_MESSAGE,
+  HTTP_STATUS_CREATED,
+  HTTP_STATUS_BAD_REQUEST,
+  HTTP_STATUS_UNAUTHORIZED,
+  FORBIDDEN_ACCESS_ERROR,
+  HTTP_STATUS_NOT_FOUND,
+  HTTP_STATUS_CONFLICT,
+  INCORRECT_URL_FORMAT,
+  INVALID_AUTH_CREDENTIALS,
+  USER_NOT_FOUND,
+  INCORRECT_USER_DATA,
+  INCORRECT_UPDATE_USER_DATA,
+  INCORRECT_MOVIE_DATA,
+  MOVIE_NOT_FOUND,
+  NO_RIGHTS_TO_DELETE_MOVIE,
+  EMAIL_ALREADY_REGISTERED,
+  INCORRECT_ADD_USER_DATA,
+  UNAUTHORIZED_ACCESS,
+  INTERNAL_SERVER_ERROR,
+  INVALID_EMAIL_FORMAT,
 };

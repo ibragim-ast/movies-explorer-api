@@ -1,9 +1,9 @@
-const { ERROR_403 } = require('../utils/constants');
+const { FORBIDDEN_ACCESS_ERROR } = require('../utils/constants');
 
 class ForbiddenError extends Error {
   constructor(message) {
     super(message);
-    this.statusCode = ERROR_403;
+    this.statusCode = FORBIDDEN_ACCESS_ERROR;
   }
 }
 

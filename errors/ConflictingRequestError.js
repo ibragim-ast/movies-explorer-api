@@ -1,9 +1,9 @@
-const { ERROR_409 } = require('../utils/constants');
+const { HTTP_STATUS_CONFLICT } = require('../utils/constants');
 
 class ConflictingRequestError extends Error {
   constructor(message) {
     super(message);
-    this.statusCode = ERROR_409;
+    this.statusCode = HTTP_STATUS_CONFLICT;
   }
 }
 

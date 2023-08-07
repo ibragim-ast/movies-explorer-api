@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { getMovies, addMovie, deleteMovie } = require('../controllers/movies');
-const { addMoviesJoi, checkMovieIdJoi } = require('../middlewares/validation');
+const { addMoviesJoi, deletedMovieJoi } = require('../middlewares/validation');
 
 // Маршрут для получения сохранённых пользователем фильмов
 router.get('/', getMovies);
@@ -9,6 +9,6 @@ router.get('/', getMovies);
 router.post('/', addMoviesJoi, addMovie);
 
 // Маршрут для удаления фильма
-router.delete('/:movieId', checkMovieIdJoi, deleteMovie);
+router.delete('/:_id', deletedMovieJoi, deleteMovie);
 
 module.exports = router;
