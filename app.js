@@ -25,6 +25,7 @@ const app = express();
 // Разрешенные домены для CORS
 const allowedCors = [
   'http://localhost:3000',
+  'https://movies-ast.nomoreparties.co',
 ];
 
 // Опции для CORS
