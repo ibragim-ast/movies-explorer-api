@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const NotFoundError = require('../errors/NotFoundError');
+const ResourceNotFoundError = require('../errors/ResourceNotFoundError');
 
 const usersRouter = require('./users');
 const moviesRouter = require('./movies');
@@ -24,6 +24,6 @@ router.use('/users', usersRouter);
 router.use('/movies', moviesRouter);
 
 // Обработка неверного URL запроса - генерация ошибки "NotFound"
-router.all('*', (req, res, next) => next(new NotFoundError('Неверный URL запроса')));
+router.all('*', (req, res, next) => next(new ResourceNotFoundError('Неверный URL запроса')));
 
 module.exports = router;

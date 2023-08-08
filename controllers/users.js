@@ -13,13 +13,13 @@ const {
   INCORRECT_ADD_USER_DATA,
 } = require('../utils/constants');
 
-const NotFoundError = require('../errors/NotFoundError');
-const BadRequestError = require('../errors/BadRequestError');
-const ConflictingRequestError = require('../errors/BadRequestError');
+const ResourceNotFoundError = require('../errors/ResourceNotFoundError');
+const InvalidRequestError = require('../errors/InvalidRequestError');
+const ConflictingError = require('../errors/InvalidRequestError');
 
 // Функция проверки наличия данных
 const checkData = (data) => {
-  if (!data) throw new NotFoundError(USER_NOT_FOUND);
+  if (!data) throw new ResourceNotFoundError(USER_NOT_FOUND);
 };
 
 // Получение информации о текущем пользователе
@@ -32,7 +32,7 @@ module.exports.getCurrentUser = (req, res, next) => {
     })
     .catch((error) => {
       if (error instanceof CastError) {
-        return next(new BadRequestError(INCORRECT_USER_DATA));
+        return next(new InvalidRequestError(INCORRECT_USER_DATA));
       }
       return next(error);
     });
@@ -40,20 +40,24 @@ module.exports.getCurrentUser = (req, res, next) => {
 
 // Обновление информации о пользователе
 module.exports.updateUserInfo = (req, res, next) => {
-  const { name, email } = req.body;
   const { _id } = req.user;
-
+  const { name, email } = req.body;
+  console.log(name, email);
   User.findByIdAndUpdate(_id, { name, email }, {
     new: true,
     runValidators: true,
   })
+    .orFail()
     .then((user) => {
       checkData(user);
       res.send(user);
     })
     .catch((error) => {
+      if (error.code === 11000) {
+        return next(new ConflictingError(EMAIL_ALREADY_REGISTERED));
+      }
       if (error instanceof ValidationError) {
-        return next(new BadRequestError(INCORRECT_UPDATE_USER_DATA));
+        return next(new InvalidRequestError(INCORRECT_UPDATE_USER_DATA));
       }
       return next(error);
     });
@@ -62,12 +66,12 @@ module.exports.updateUserInfo = (req, res, next) => {
 // Регистрация
 module.exports.createUser = (req, res, next) => {
   const {
-    name, about, avatar, email, password,
+    name, email, password,
   } = req.body;
 
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
-      name, about, avatar, email, password: hash,
+      name, email, password: hash,
     }))
     .then((createdUser) => {
       const user = createdUser.toObject();
@@ -78,10 +82,10 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((error) => {
       if (error.code === 11000) {
-        return next(new ConflictingRequestError(EMAIL_ALREADY_REGISTERED));
+        return next(new ConflictingError(EMAIL_ALREADY_REGISTERED));
       }
       if (error instanceof ValidationError) {
-        return next(new BadRequestError(INCORRECT_ADD_USER_DATA));
+        return next(new InvalidRequestError(INCORRECT_ADD_USER_DATA));
       }
       return next(error);
     });

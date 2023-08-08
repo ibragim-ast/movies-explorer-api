@@ -1,8 +1,8 @@
 const { Error: { ValidationError, CastError } } = require('mongoose');
 const Movie = require('../models/movie');
-const BadRequestError = require('../errors/BadRequestError');
+const InvalidRequestError = require('../errors/InvalidRequestError');
 const ForbiddenError = require('../errors/ForbiddenError');
-const NotFoundError = require('../errors/NotFoundError');
+const ResourceNotFoundError = require('../errors/ResourceNotFoundError');
 const {
   HTTP_STATUS_CREATED,
   NO_RIGHTS_TO_DELETE_MOVIE,
@@ -19,7 +19,7 @@ module.exports.getMovies = (req, res, next) => {
     .then((movies) => res.send(movies))
     .catch((error) => {
       if (error instanceof ValidationError) {
-        return next(new BadRequestError(INCORRECT_MOVIE_DATA));
+        return next(new InvalidRequestError(INCORRECT_MOVIE_DATA));
       }
       return next(error);
     });
@@ -35,7 +35,7 @@ module.exports.addMovie = (req, res, next) => {
     .then((populatedMovie) => res.status(HTTP_STATUS_CREATED).send(populatedMovie))
     .catch((error) => {
       if (error instanceof ValidationError) {
-        return next(new BadRequestError(INCORRECT_MOVIE_DATA));
+        return next(new InvalidRequestError(INCORRECT_MOVIE_DATA));
       }
       return next(error);
     });
@@ -46,7 +46,7 @@ module.exports.deleteMovie = (req, res, next) => {
   const { _id: movieId } = req.params;
   Movie.findById(movieId)
     .then((movie) => {
-      if (!movie) throw new NotFoundError(MOVIE_NOT_FOUND);
+      if (!movie) throw new ResourceNotFoundError(MOVIE_NOT_FOUND);
 
       const ownerId = movie.owner.valueOf();
       const userId = req.user._id;
@@ -59,7 +59,7 @@ module.exports.deleteMovie = (req, res, next) => {
     .then((deletedMovie) => res.send(deletedMovie))
     .catch((error) => {
       if (error instanceof CastError) {
-        return next(new BadRequestError(INCORRECT_MOVIE_DATA));
+        return next(new InvalidRequestError(INCORRECT_MOVIE_DATA));
       }
       return next(error);
     });

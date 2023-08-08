@@ -1,10 +1,10 @@
 const { HTTP_STATUS_BAD_REQUEST } = require('../utils/constants');
 
-class BadRequestError extends Error {
+class InvalidRequestError extends Error {
   constructor(message) {
     super(message);
     this.statusCode = HTTP_STATUS_BAD_REQUEST;
   }
 }
 
-module.exports = BadRequestError;
+module.exports = InvalidRequestError;
