@@ -15,7 +15,7 @@ const {
 
 const ResourceNotFoundError = require('../errors/ResourceNotFoundError');
 const InvalidRequestError = require('../errors/InvalidRequestError');
-const ConflictingError = require('../errors/InvalidRequestError');
+const ConflictingError = require('../errors/ConflictingError');
 
 // Функция проверки наличия данных
 const checkData = (data) => {
